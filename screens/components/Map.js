@@ -23,6 +23,21 @@ const Map = () => {
   }, [origin, destination]);
   //THIS PART OF CODE RUNS WHEN THE APP OR CODE RE-RENDERS, so here IT WILL RE RUN WHEN THE ORIGIN OR DESTINATION RE-RENDERS
 
+  useEffect(() => {
+    if (!origin || !destination) return;
+
+      const getTravelTime = async() => {
+          fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${GOOGLE_MAPS_APIKEY}`
+          )
+          .then((res) => res.json())
+          .then(data => {
+              console.log(data);
+          })
+      }
+
+      getTravelTime();
+  }, [origin, destination, GOOGLE_MAPS_APIKEY])
+
   return (
     <MapView
       ref={mapRef}
