@@ -2,8 +2,8 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef } from "react";
 import MapView, { Marker } from "react-native-maps";
 import tw from "tailwind-react-native-classnames";
-import { useSelector } from "react-redux";
-import { selectDestination, selectOrigin } from "../../slices/navSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectDestination, selectOrigin, setTravelTimeInformation } from "../../slices/navSlice";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 
@@ -12,6 +12,7 @@ const Map = () => {
   const destination = useSelector(selectDestination);
   //USE REF HOOK IS LIKE A MASSIVE POINTER, WE ARE GONNA HAVE A REFERENCE TO THE MAP SO THAT WE CAN CHANGE THINGS ON THE MAP
   const mapRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!origin || !destination) return;
@@ -31,7 +32,8 @@ const Map = () => {
           )
           .then((res) => res.json())
           .then(data => {
-              console.log(data);
+            //store the info into redux
+              dispatch(setTravelTimeInformation(data.rows[0].elements[0]))
           })
       }
 
